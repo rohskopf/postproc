@@ -74,7 +74,7 @@ void Powerspec::initialize()
     // Read data
     
     char filename[1000];
-    string data_dirname = "dump_spins.lammpstrj";
+    string data_dirname = "dump_iron.lammpstrj";
     sprintf(filename, "%s", data_dirname.c_str());
     if (rank==0) printf(" Data filename: %s\n", filename);
     
@@ -182,11 +182,13 @@ void Powerspec::initialize()
     
     // Allocate arrays for storing PS
     double **ps;
-    mem->allocate(ps, nfreq,nepp[rank]);
+    mem->allocate(ps, nfreq,3*nepp[rank]);
     
   for (int f=0; f<nfreq; f++){
-    for (int n=0; n<nepp[rank]; n++){
-      ps[f][n] = 0.0;
+    for (int i=0; i<nepp[rank]; i++){
+        for (int a=0; a<3; a++){
+            ps[f][3*i + a] = 0.0;
+        }
     }
   }
   
@@ -213,7 +215,7 @@ void Powerspec::initialize()
     }
     
     // Subtract the mean from the data.
-    for (int n=0; n<nepp[rank]; n++){
+    for (int n=0; n<3*nepp[rank]; n++){
       double mean=0.0;
       for (int t=0; t<ntimesteps; t++){
         mean += data[t][n]/ntimesteps;
@@ -227,7 +229,7 @@ void Powerspec::initialize()
     //int modeindx = 11;
     //for (int n=modeindx; n<modeindx+1; n++){
     if (rank==0) printf(" Calculating power spectrums.\n");
-    for (int n=0; n<nepp[rank]; n++){
+    for (int n=0; n<3*nepp[rank]; n++){
       // Build the input array for FFT calculation.
       for (int t=0; t<ntimesteps; t++){
         in[t] = data[t][n];
@@ -257,7 +259,7 @@ void Powerspec::initialize()
     for (int f = 0; f < nfreq; f++){
       psum[f]=0.0;
     }
-    for (int n=0; n<nepp[rank]; n++){
+    for (int n=0; n<3*nepp[rank]; n++){
       
       // Calculate the power spectrum
       //printf("freq | powerspectrum\n");
