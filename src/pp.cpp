@@ -39,9 +39,11 @@ PP::PP(int narg, char **arg)
     MPI_Comm_rank(comm,&local);
 
     //  Get the number of processes.
-    nprocs = MPI::COMM_WORLD.Get_size ( ); //Get_size gets number of processes (np) in communicator group
-    //  Get the individual process ID.
-    rank = MPI::COMM_WORLD.Get_rank ( ); // Get_rank gets the rank of the calling process in the communicator
+    //nprocs = MPI::COMM_WORLD.Get_size ( ); //Get_size gets number of processes (np) in communicator group
+    MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
+    //Get the individual process ID.
+    //rank = MPI::COMM_WORLD.Get_rank ( ); // Get_rank gets the rank of the calling process in the communicator
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank); 
 
     /************************** Initial Screen Output **************************/
     if (rank == 0)
