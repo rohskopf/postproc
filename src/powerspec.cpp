@@ -74,7 +74,7 @@ void Powerspec::initialize()
     // Read data
     
     char filename[1000];
-    string data_dirname = "dump_iron.lammpstrj";
+    string data_dirname = "dump.velocities";
     sprintf(filename, "%s", data_dirname.c_str());
     if (rank==0) printf(" Data filename: %s\n", filename);
     
